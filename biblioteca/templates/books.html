@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ block.super }} - Listar Livros
+{% endblock %}
+
+{% block content %}
+  <h1>Lista de livro</h1>
+
+  <li>
+  {% for b in books %}
+    <ul>{{ b.name }}</ul>
+  {% endfor %}
+  </li>
+{% endblock %}
