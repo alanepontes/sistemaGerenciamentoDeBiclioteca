@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from biblioteca.views import IndexView, ListBooksView
+from biblioteca.views import * #IndexView, ListBooksView
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', IndexView.as_view(), name='home'),
     url(r'^books/', ListBooksView, name='books'),
+    url(r'^(?P<pk>[0-9]+)/$', UserProfileDetail.as_view(), name='user_profile_detail'),
+    url(r'^(?P<pk>[0-9]+)/update/$', UserProfileUpdate.as_view(), name='user_profile_edit'),
 ]
