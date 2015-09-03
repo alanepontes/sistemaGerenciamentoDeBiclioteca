@@ -7,9 +7,11 @@
 {% block content %}
   <h1>Lista de livro</h1>
 
-  <li>
+  <ul>
   {% for b in books %}
-    <ul>{{ b.name }}</ul>
+    <li>{{ b.nome }}</li>
+  {% empty %}
+    <p>Não possui nenhum livro</p>
   {% endfor %}
-  </li>
+  </ul>
 {% endblock %}
