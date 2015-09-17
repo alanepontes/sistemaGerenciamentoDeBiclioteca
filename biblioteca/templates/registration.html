@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ block.super }} - Index
+{% endblock %}
+
+{% block content %}
+  {% if errors %}
+  <ul>
+    {% for error in errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if registered %}
+    Rango says: <strong>thank you for registering!</strong>
+        <a href="/rango/">Return to the homepage.</a><br />
+  {% else %}
+    <p>Solicitar registro.</p>
+
+        <form id="user_form" method="post" action="."
+                enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ user_form.as_p }}
+
+            <p>Endereço</p>
+            {{ endereco_form.as_p }}
+
+            <!-- Provide a button to click to submit the form. -->
+            <input type="submit" name="submit" value="Registrar" />
+        </form>
+        {% endif %}
+{% endblock %}

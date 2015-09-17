@@ -15,12 +15,21 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from biblioteca.views import * #IndexView, ListBooksView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import login, logout
+#from django.views.generic import LoginView
+
+from biblioteca.views import *
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', IndexView.as_view(), name='home'),
-    url(r'^books/', ListBooksView, name='books'),
-    url(r'^(?P<pk>[0-9]+)/$', UserProfileDetail.as_view(), name='user_profile_detail'),
-    url(r'^(?P<pk>[0-9]+)/update/$', UserProfileUpdate.as_view(), name='user_profile_edit'),
+    url(r'^$', login_required(IndexView.as_view()), name='home'),
+    url(r'^login/$', LoginView, name='login'),
+    url(r'^logout/$', LogoutView, name='logout'),
+    url(r'^register/$', RegistrationView, name='registration'),
+    url(r'^emprestar/(?P<pk>[0-9]+)/$', login_required(EmprestarLivroView), name='emprestar'),
+    url(r'^books/', login_required(ListBooksView), name='books'),
+    url(r'^book/(?P<pk>[0-9]+)/$', login_required(BookDetailView.as_view()), name='book_detail'),
+#    url(r'^user/(?P<pk>[0-9]+)/$', UserProfileDetail.as_view(), name='user_profile_detail'),
+#    url(r'^user/(?P<pk>[0-9]+)/update/$', UserProfileUpdate.as_view(), name='user_profile_edit'),
 ]

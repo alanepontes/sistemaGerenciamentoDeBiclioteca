@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ block.super }} - Listar Livros
+{% endblock %}
+
+{% block content %}
+  <h1>{{ object.nome }}</h1>
+  <p>ISBN10: {{ object.isbn10 }}</p>
+  <p>ISBN13: {{ object.isbn13 }}</p>
+  <p>Data de Publicação: {{ object.data_publicacao }}</p>
+  <p>Descrição: {{ object.descricao }}</p>
+  <p>Quantidade na biblioteca: {{ object.quantidade }}</p>
+{% endblock %}

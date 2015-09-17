@@ -9,7 +9,14 @@
 
   <ul>
   {% for b in books %}
-    <li>{{ b.nome }}</li>
+    <li>
+      <a href="{% url 'book_detail' b.id %}">{{ b.nome }}</a> -
+      {% if b.quantidade_disponivel > 0 %}
+        <a href="{% url 'emprestar' b.id %}">Emprestar</a>
+      {% else %}
+        <a href="{% url 'emprestar' b.id %}">Reservar</a>
+      {% endif %}
+    </li>
   {% empty %}
     <p>Não possui nenhum livro</p>
   {% endfor %}
