@@ -6,9 +6,13 @@ from django.contrib.auth.models import User
 from django.views.generic import CreateView, UpdateView, DetailView, View
 from django.template.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
+from django.core.urlresolvers import reverse
 
 from biblioteca.forms import *
 from biblioteca.models import *
+
+#TODO Organizar e padronizar as views
+#TODO Criar matrícula ao registrar usuário
 
 class IndexView(TemplateView):
     template_name = "index.html"
@@ -54,14 +58,14 @@ def LoginView(request):
         else:
             messages.append('Password incorrect or account not available.')
             return render_to_response('login.html', {'errors': messages}, context_instance=RequestContext(request))
-        return redirect('/')
+        return redirect(reverse('home'))
 
     return render_to_response('login.html', context_instance=RequestContext(request))
 
 
 def LogoutView(request):
     logout(request)
-    return redirect('/')
+    return redirect(reverse('home')
 
 
 def RegistrationView(request):
@@ -72,7 +76,10 @@ def RegistrationView(request):
         user_form = UserForm(data=request.POST)
         endereco_form = EnderecoForm(data=request.POST)
 
-        if user_form.is_valid() and endereco_form.is_valid():
+        if user_form.is_valid()
+        and endereco_form.is_valid()
+        and contato_form.is_valid():
+
             user = user_form.save(commit=False)
             user.set_password(user.password)
             user.is_active = False
@@ -81,18 +88,26 @@ def RegistrationView(request):
             endereco = endereco_form.save(commit=False)
             endereco.user = user
             endereco.save()
+
+            contato = contato_form.save(commit=False)
+            contato.user = user
+            contato.save()
+            
             registered = True
 
         else:
-            print user_form.errors, endereco_form.errors
+            pass
+            #print user_form.errors, endereco_form.errors, contato_form.errors
 
     else:
         user_form = UserForm()
         endereco_form = EnderecoForm()
+        contato_form = ContatoForm()
 
     return render_to_response(
                 'registration.html',
                 {'user_form': user_form,
                  'endereco_form': endereco_form,
+                 'contato_form': contato_form,
                  'registered': registered},
                 context)

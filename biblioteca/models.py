@@ -6,6 +6,10 @@ from django.contrib.auth.models import User
 
 import random
 
+#TODO Criar o número de matrícula após o usuário ser cadastrado
+#TODO Colocar a função de matrícula em algum lugar como "services"
+#TOOD Organizar os modelos
+
 class Matricula(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True)
     numero = models.IntegerField(unique=True)
@@ -37,8 +41,7 @@ def create_matricula_user(**kwargs):
         num = random.randrange(999999)
         matricula = Matricula.objects.get(numero=num)
     matricula = Matricula.objects.get_or_create(user=kwargs['user'], numero=num)
-
-#user_registered.connect(create_matricula_user)
+r)
 
 class Livro(models.Model):
     nome = models.CharField(max_length=50)
@@ -57,24 +60,11 @@ class Reserva(models.Model):
     data = models.DateTimeField()
     ativa = models.BooleanField(default=True)
 
-    #def __unicode__(self):
-    #    return self
-
 class Emprestimo(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL)
     livro = models.ForeignKey(Livro)
     data = models.DateTimeField()
     data_devolucao = models.DateTimeField(null=True, blank=True)
-
-    #def __unicode__(self):
-    #    return self.usuario.first_name
-
-#class Devolucao(models.Model):
-#    emprestimo = models.ForeignKey(Emprestimo)
-#    data = models.DateTimeField()
-#
-#    def __unicode__(self):
-#        return self
 
 class Endereco(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
@@ -84,20 +74,12 @@ class Endereco(models.Model):
     cep = models.CharField(max_length=8)
     cidade = models.CharField(max_length=50)
 
-    #def __unicode__(self):
-    #    return self
-
 class Contato(models.Model):
-    telefone = models.CharField(max_length=15)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    contato = models.CharField(max_length=15)
     descricao = models.CharField(max_length=100)
-
-#    def __unicode__(self):
-#        return self
 
 class Pedido(models.Model):
     livro = models.ForeignKey(Livro)
     fornecedor = models.ForeignKey(User)
     data = models.DateTimeField()
-
-    def __unicode__(self):
-        return self

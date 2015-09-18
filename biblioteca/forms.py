@@ -14,3 +14,8 @@ class EnderecoForm(forms.ModelForm):
     class Meta:
         model = Endereco
         fields = ('rua', 'numero', 'bairro', 'cep', 'cidade')
+
+class ContatoForm(forms.ModelForm):
+    class Meta:
+        model = Contato
+        fields = ('contato', 'descricao')

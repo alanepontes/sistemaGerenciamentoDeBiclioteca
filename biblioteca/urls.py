@@ -16,10 +16,10 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import login, logout
-#from django.views.generic import LoginView
 
 from biblioteca.views import *
+
+#TODO Organizar URLs
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
