@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.db.models.signals import post_save
 from django.conf import settings
@@ -32,16 +34,6 @@ class Matricula(models.Model):
 #        userprofile = UserProfile(user=user)
 #        userprofile.save()
 #    return
-
-def create_matricula_user(**kwargs):
-    random.seed()
-    num = random.randrange(999999)
-    matricula = Matricula.objects.get(numero=num)
-    while matricula:
-        num = random.randrange(999999)
-        matricula = Matricula.objects.get(numero=num)
-    matricula = Matricula.objects.get_or_create(user=kwargs['user'], numero=num)
-r)
 
 class Livro(models.Model):
     nome = models.CharField(max_length=50)

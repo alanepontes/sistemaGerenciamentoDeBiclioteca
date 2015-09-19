@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.conf import settings
 from django.views.generic.base import TemplateView, View
 from django.template import RequestContext
@@ -10,6 +12,7 @@ from django.core.urlresolvers import reverse
 
 from biblioteca.forms import *
 from biblioteca.models import *
+from biblioteca.services import *
 
 #TODO Organizar e padronizar as views
 #TODO Criar matrícula ao registrar usuário
@@ -62,11 +65,9 @@ def LoginView(request):
 
     return render_to_response('login.html', context_instance=RequestContext(request))
 
-
 def LogoutView(request):
     logout(request)
-    return redirect(reverse('home')
-
+    return redirect(reverse('home'))
 
 def RegistrationView(request):
     context = RequestContext(request)
@@ -75,26 +76,11 @@ def RegistrationView(request):
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
         endereco_form = EnderecoForm(data=request.POST)
-
-        if user_form.is_valid()
-        and endereco_form.is_valid()
-        and contato_form.is_valid():
-
-            user = user_form.save(commit=False)
-            user.set_password(user.password)
-            user.is_active = False
-            user.save()
-
-            endereco = endereco_form.save(commit=False)
-            endereco.user = user
-            endereco.save()
-
-            contato = contato_form.save(commit=False)
-            contato.user = user
-            contato.save()
-            
-            registered = True
-
+        contato_form = ContatoForm(data=request.POST)
+        
+        if user_form.is_valid() and endereco_form.is_valid() and contato_form.is_valid():
+            if register_user(user_form, endereco_form, contato_form):
+                registered = True
         else:
             pass
             #print user_form.errors, endereco_form.errors, contato_form.errors

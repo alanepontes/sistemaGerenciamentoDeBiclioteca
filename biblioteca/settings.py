@@ -104,3 +104,11 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'alfredocdmiranda'
+EMAIL_HOST_PASSWORD = 'm3str3spl1tt3r'
+#DEFAULT_FROM_EMAIL = 'my gmail account'
+#DEFAULT_TO_EMAIL = 'to email'
