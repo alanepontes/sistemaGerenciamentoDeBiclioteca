@@ -35,13 +35,29 @@ class Matricula(models.Model):
 #        userprofile.save()
 #    return
 
-class Livro(models.Model):
+class Material(models.Model):
     nome = models.CharField(max_length=50)
-    isbn10 = models.CharField(max_length=10)
-    isbn13 = models.CharField(max_length=13)
+    autor = models.CharField(max_length=100)
     data_publicacao = models.DateField()
     descricao = models.TextField()
     quantidade = models.IntegerField(default=0)
+
+class Livro(Material):
+    isbn10 = models.CharField(max_length=10)
+    isbn13 = models.CharField(max_length=13)
+    best_seller = models.BooleanField()
+
+    def __unicode__(self):
+        return self.nome
+
+class Audiovisual(Material):
+    pass
+
+    def __unicode__(self):
+        return self.nome
+
+class RevistaReferencia(Material):
+    pass
 
     def __unicode__(self):
         return self.nome

@@ -26,7 +26,9 @@ class ContatoInline(admin.StackedInline):
 class UserAdmin(ModelAdmin):
     inlines = (MatriculaInline, EnderecoInline, ContatoInline)
 
+admin.site.register(Audiovisual)
 admin.site.register(Livro)
+admin.site.register(RevistaReferencia)
 admin.site.register(Reserva)
 admin.site.register(Emprestimo)
 admin.site.register(Pedido)

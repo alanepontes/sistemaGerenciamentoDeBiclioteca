@@ -27,14 +27,20 @@ class IndexView(TemplateView):
         return context
 
 def ListBooksView(request):
-    books = Livro.objects.all()
-    emprestimos = Emprestimo.objects.filter(data_devolucao=None)
-    dict_emprestimos = { e.livro.id: 0 for e in emprestimos }
-    for e in emprestimos:
-        dict_emprestimos[e.livro.id] += 1
-    for b in books:
-        b.quantidade_disponivel = b.quantidade - dict_emprestimos[b.id]
-    return render_to_response("books.html",{"books": books, "emprestimos": dict_emprestimos}, context_instance=RequestContext(request))
+    material = Material.objects.all()
+    
+    if request.method == "POST":
+        messages = []
+        busca=request.POST['material']
+
+        material = Material.objects.filter(nome__startswith=busca)
+    #emprestimos = Emprestimo.objects.filter(data_devolucao=None)
+    #dict_emprestimos = { e.livro.id: 0 for e in emprestimos }
+    #for e in emprestimos:
+    #    dict_emprestimos[e.livro.id] += 1
+    #for b in books:
+    #    b.quantidade_disponivel = b.quantidade - dict_emprestimos[b.id]
+    return render_to_response("books.html",{"books": material}, context_instance=RequestContext(request))
 
 def EmprestarLivroView(request, pk):
     current_user = request.user

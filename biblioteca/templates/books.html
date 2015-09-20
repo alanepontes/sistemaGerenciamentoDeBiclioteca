@@ -5,20 +5,32 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Lista de livro</h1>
+  <h1>Lista de materiais</h1>
+  
+  <form action="." method="post">
+    {% csrf_token %}
+    <p>Busca: <input type="text" name="material"></p>
+    <input type="submit" value="busca">
+  </form>
 
   <ul>
   {% for b in books %}
     <li>
+      <a href="{% url 'book_detail' b.id %}">{{ b.nome }}</a>
+      {% if b.audiovisual %}
+      <p>Audiovisual</p>
+      {% endif %}
+      {% comment %}
       <a href="{% url 'book_detail' b.id %}">{{ b.nome }}</a> -
       {% if b.quantidade_disponivel > 0 %}
         <a href="{% url 'emprestar' b.id %}">Emprestar</a>
       {% else %}
         <a href="{% url 'emprestar' b.id %}">Reservar</a>
-      {% endif %}
+      {% endif %}"
+      {% endcomment %}
     </li>
   {% empty %}
-    <p>Não possui nenhum livro</p>
+    <p>Não possui nenhum material</p>
   {% endfor %}
   </ul>
 {% endblock %}

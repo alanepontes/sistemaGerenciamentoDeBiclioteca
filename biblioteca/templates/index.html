@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load has_group %}
 
 {% block title %}
   {{ block.super }} - Index
@@ -6,6 +7,18 @@
 
 {% block content %}
   <h1>Bem-vindo à Biblioteca ES</h1>
+  
+  {% if request.user|has_group:"bibliotecario" %}
+    {% include "index/bibliotecario.html" %}
+  {% elif request.user|has_group:"fornecedor" %}
+    <p>Fornecedor</p>
+    {% include "index/fornecedor.html" %}
+  {% elif request.user|has_group:"leitor" %}
+    <p>Leitor</p>
+    {% include "index/leitor.html" %}
+  {% else %}
+    <p>Nenhum grupo previsto</p>
+  {% endif %}
 
-  <a href="{% url 'books' %}">Listar Livros</a>
+  <p><a href="{% url 'books' %}">Listar Livros</a></p>
 {% endblock %}
