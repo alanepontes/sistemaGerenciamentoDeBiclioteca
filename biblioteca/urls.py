@@ -22,16 +22,18 @@ from biblioteca.views import *
 #TODO Organizar URLs
 
 urlpatterns = [
+    url(r'^$', IndexView, name='home'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', login_required(IndexView.as_view()), name='home'),
     url(r'^cancelar/$', CancelarRegistroView, name='cancelar'),
-    url(r'^emprestar/(?P<pk>[0-9]+)/$', login_required(EmprestarView), name='emprestar'),
-    url(r'^historico/$', login_required(HistoricoView), name='historico'),
-    url(r'^reclamacao/$', login_required(ReclamacaoView), name='reclamacao'),
+    url(r'^emprestar/(?P<pk>[0-9]+)/$', EmprestarView, name='emprestar'),
+    url(r'^historico/$', HistoricoView, name='historico'),
     url(r'^login/$', LoginView, name='login'),
     url(r'^logout/$', LogoutView, name='logout'),
+    url(r'^materials/', MaterialListView, name='materials'),
+    url(r'^material/(?P<pk>[0-9]+)/$', MaterialDetailView, name='material'),
+    url(r'^pedidos/$', PedidoListView, name='pedidos'),
+    url(r'^pedido/(?P<pk>[0-9]+)/$', PedidoDetailView, name='pedido'),
+    url(r'^reclamacao/$', ReclamacaoView, name='reclamacao'),
     url(r'^register/$', RegistrationView, name='registration'),
-    url(r'^reservar/(?P<pk>[0-9]+)/$', login_required(ReservarView), name='reservar'),
-    url(r'^books/', login_required(ListBooksView), name='books'),
-    url(r'^book/(?P<pk>[0-9]+)/$', login_required(BookDetailView.as_view()), name='book_detail'),
+    url(r'^reservar/(?P<pk>[0-9]+)/$', ReservarView, name='reservar'),
 ]

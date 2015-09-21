@@ -41,6 +41,7 @@ class Contato(models.Model):
     contato = models.CharField(max_length=15)
     descricao = models.CharField(max_length=100)
 
+
 #Material
 class Material(models.Model):
     nome = models.CharField(max_length=50)
@@ -162,6 +163,7 @@ class RevistaReferencia(Material):
     def __unicode__(self):
         return self.nome
 
+
 #Emprestimos
 class Emprestimo(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL)
@@ -188,9 +190,37 @@ class Reserva(models.Model):
 
 #Pedido
 class Pedido(models.Model):
-    livro = models.ForeignKey(Material)
-    fornecedor = models.ForeignKey(settings.AUTH_USER_MODEL)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='usuario')
+    fornecedor = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='fornecedor')
+    material = models.ForeignKey(Material)
+    quantidade = models.IntegerField()
     data = models.DateTimeField()
+
+    def entregar(self, fornecedor, valor):
+        entrega = Entrega.objects.get(pedido=self.id)
+
+        if not entrega:
+            entrega = Entrega(fornecedor=fornecedor, pedido=self,
+                              data=datetime.now(), valor=valor, pago=False)
+            entrega.save()
+
+            return True
+        else:
+            return False
+
+class Entrega(models.Model):
+    fornecedor = models.ForeignKey(settings.AUTH_USER_MODEL)
+    pedido = models.OneToOneField(Pedido)
+    data = models.DateTimeField()
+    valor = models.DecimalField(max_digits=7, decimal_places=2)
+    pago = models.BooleanField()
+
+    def pagar(self):
+        if not self.pago:
+            self.pago = True
+        else:
+            self.pago = False
+
 
 #Reclamação
 class Reclamacao(models.Model):

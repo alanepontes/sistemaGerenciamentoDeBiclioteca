@@ -27,12 +27,14 @@ class UserAdmin(ModelAdmin):
     inlines = (ProfileInline, EnderecoInline, ContatoInline)
 
 admin.site.register(Audiovisual)
-admin.site.register(Livro)
-admin.site.register(RevistaReferencia)
-admin.site.register(Reserva)
 admin.site.register(Emprestimo)
-admin.site.register(Pedido)
+admin.site.register(Entrega)
 admin.site.register(Endereco)
+admin.site.register(Livro)
+admin.site.register(Pedido)
+admin.site.register(Reclamacao)
+admin.site.register(Reserva)
+admin.site.register(RevistaReferencia)
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

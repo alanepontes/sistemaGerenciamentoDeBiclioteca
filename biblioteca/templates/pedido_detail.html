@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ block.super }} - Pedido
+{% endblock %}
+
+{% block content %}
+  <p>Material: {{ object.material.nome }}</p>
+  <p>Fornecedor: {{ object.fornecedor.name }}</p>
+  <p>Data: {{ object.data }}</p>
+  <p>Quantidade: {{ object.quantidade }}</p>
+
+  <form action="." method="post">
+    {% csrf_token %}
+    {{ entrega_form.as_p }}
+    <input type="submit" value="Enviar">
+  </form>
+{% endblock %}

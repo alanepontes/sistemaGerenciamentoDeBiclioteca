@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ block.super }} - Lista de Pedidos
+{% endblock %}
+
+{% block content %}
+  <h1>Lista de pedidos</h1>
+
+  <ul>
+  {% for o in objects %}
+    <li>
+      <a href="{% url 'pedido' o.id %}">[{{ o.data }}] - {{ o.material.nome }}</a>
+    </li>
+  {% empty %}
+    <p>Não possui nenhum pedido em aberto</p>
+  {% endfor %}
+  </ul>
+{% endblock %}
