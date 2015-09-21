@@ -35,20 +35,17 @@ def ListBooksView(request):
         busca=request.POST['material']
 
         material = Material.objects.filter(nome__startswith=busca)
-    #emprestimos = Emprestimo.objects.filter(data_devolucao=None)
-    #dict_emprestimos = { e.livro.id: 0 for e in emprestimos }
-    #for e in emprestimos:
-    #    dict_emprestimos[e.livro.id] += 1
-    #for b in books:
-    #    b.quantidade_disponivel = b.quantidade - dict_emprestimos[b.id]
+        
     return render_to_response("books.html",{"books": material}, context_instance=RequestContext(request))
 
 def EmprestarView(request, pk):
-    #user = User.objects.get(id=request.user.id)
     material = Material.objects.get(id=pk)
-    #material.emprestar(request.user)
     if hasattr(material, 'livro'):
         material.livro.emprestar(request.user)
+    elif hasattr(material, 'audiovisual'):
+        material.audiovisual.emprestar(request.user)
+    elif hasattr(material, 'revistareferencia'):
+        material.revistareferencia.emprestar(request.user)
     return redirect("home")
 
 class BookDetailView(DetailView):

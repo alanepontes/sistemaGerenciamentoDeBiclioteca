@@ -46,6 +46,7 @@ class Material(models.Model):
     data_publicacao = models.DateField()
     descricao = models.TextField()
     quantidade = models.IntegerField(default=0)
+    valor = models.DecimalField(max_digits=7, decimal_places=2)
 
 class Livro(Material):
     isbn10 = models.CharField(max_length=10)
@@ -53,7 +54,9 @@ class Livro(Material):
     best_seller = models.BooleanField()
     
     def emprestar(self, usuario):
-        emprestimos = Emprestimo.objects.filter(usuario=usuario.id)
+        emprestimo_livro_user = Emprestimo.objects.filter(usuario=usuario.id, material=self.id, data_devolvida=None)
+        quant_emprestimos_user = Emprestimo.objects.filter(usuario=usuario.id, data_devolvida=None)
+        quant_emprestimo_livro = Emprestimo.objects.filter(material=self.id, data_devolvida=None)
         diff = datetime.now()-datetime.combine(usuario.profile.data_nascimento, datetime.min.time())
         data = datetime.now()
         if self.best_seller:
@@ -61,20 +64,36 @@ class Livro(Material):
         else:
             data_devolucao = data + timedelta(weeks=3)
         
-        if diff.days/365 > 12:
-            if len(emprestimos) < 5:
-                emprestimo = Emprestimo(usuario=usuario, material=self,
-                                        data=data, data_devolucao=data_devolucao)
-                emprestimo.save()
+        if not emprestimo_livro_user:
+            if self.quantidade - len(quant_emprestimo_livro) > 0:
+                if diff.days/365 > 12:
+                    if len(quant_emprestimos_user) < 5:
+                        emprestimo = Emprestimo(usuario=usuario, material=self,
+                                                data=data, data_devolucao=data_devolucao)
+                        emprestimo.save()
+                    else:
+                        raise BaseException("Já possui máximo de itens emprestados.")
+                else:
+                    if len(quant_emprestimos_user) < 2:
+                        emprestimo = Emprestimo(usuario=usuario, material=self,
+                                                data=data, data_devolucao=data_devolucao)
+                        emprestimo.save()
+                    else:
+                        raise BaseException("Já possui máximo de itens emprestados.")
             else:
-                raise BaseException("Já possui máximo de itens emprestados.")
+                raise BaseException("Não há itens disponíveis.")
         else:
-            if len(emprestimos) < 2:
-                emprestimo = Emprestimo(usuario=usuario, material=self,
-                                        data=data, data_devolucao=data_devolucao)
-                emprestimo.save()
-            else:
-                raise BaseException("Já possui máximo de itens emprestados.")
+            raise BaseException("Você já possue esse livro em mãos.")
+        
+        return True
+            
+    def reservar(self, usuario):
+        reservas = Reserva.objects.filter(usuario=usuario.id, material=self.id, ativa=True)
+        if len(reservas) >= 1:
+            raise BaseException("Você já possui uma reserva desse material")
+        
+        reserva = Reserva(usuario=usuario, material=self, data=datetime.now(), ativa=True)
+        reserva.save()
         
         return True
             
@@ -86,25 +105,43 @@ class Audiovisual(Material):
     pass
     
     def emprestar(self, usuario):
-        emprestimos = Emprestimo.objects.filter(usuario=usuario)
+        emprestimo_livro_user = Emprestimo.objects.filter(usuario=usuario.id, material=self.id, data_devolvida=None)
+        quant_emprestimos_user = Emprestimo.objects.filter(usuario=usuario.id, data_devolvida=None)
+        quant_emprestimo_livro = Emprestimo.objects.filter(material=self.id, data_devolvida=None)
         diff = datetime.now()-datetime.combine(usuario.profile.data_nascimento, datetime.min.time())
         data = datetime.now()
         data_devolucao = data + timedelta(weeks=2)
         
-        if diff.days/365 > 12:
-            if len(emprestimos) < 5:
-                emprestimo = Emprestimo(usuario=usuario.id, material=self.id,
-                                        data=data, data_devolucao=data_devolucao)
-                emprestimo.save()
+        if not emprestimo_livro_user:
+            if self.quantidade - len(quant_emprestimo_livro) > 0:
+                if diff.days/365 > 12:
+                    if len(quant_emprestimos_user) < 5:
+                        emprestimo = Emprestimo(usuario=usuario, material=self,
+                                                data=data, data_devolucao=data_devolucao)
+                        emprestimo.save()
+                    else:
+                        raise BaseException("Já possui máximo de itens emprestados.")
+                else:
+                    if len(quant_emprestimos_user) < 2:
+                        emprestimo = Emprestimo(usuario=usuario, material=self,
+                                                data=data, data_devolucao=data_devolucao)
+                        emprestimo.save()
+                    else:
+                        raise BaseException("Já possui máximo de itens emprestados.")
             else:
-                raise BaseException("Já possui máximo de itens emprestados.")
+                raise BaseException("Não há itens disponíveis.")
         else:
-            if len(emprestimos) < 2:
-                emprestimo = Emprestimo(usuario=usuario.id, material=self.id,
-                                        data=data, data_devolucao=data_devolucao)
-                emprestimo.save()
-            else:
-                raise BaseException("Já possui máximo de itens emprestados.")
+            raise BaseException("Você já possui esse livro em mãos.")
+        
+        return True
+    
+    def reservar(self, usuario):
+        reservas = Reserva.objects.filter(usuario=usuario.id, material=self.id, ativa=True)
+        if len(reservas) >= 1:
+            raise BaseException("Você já possui uma reserva desse material")
+        
+        reserva = Reserva(usuario=usuario, material=self, data=datetime.now(), ativa=True)
+        reserva.save()
         
         return True
     
@@ -116,6 +153,9 @@ class RevistaReferencia(Material):
 
     def emprestar(self, usuario):
         raise BaseException("Não pode locar Revistas e Referências.")
+    
+    def reservar(self, usuario):
+        raise BaseException("Não pode reservar Revistas e Referências.")
 
     def __unicode__(self):
         return self.nome
@@ -127,6 +167,15 @@ class Emprestimo(models.Model):
     data = models.DateTimeField()
     data_devolucao = models.DateTimeField(blank=True)
     data_devolvida = models.DateTimeField(null=True, blank=True)
+    renovada = models.BooleanField(default=False)
+    multa = models.DecimalField(max_digits=7, decimal_places=2)
+    
+    def renovar(self):
+        if not renovada:
+            data_devolucao = data_devolucao + (data_devolucao-data)
+            return True
+        else:
+            return False
 
 class Reserva(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL)
