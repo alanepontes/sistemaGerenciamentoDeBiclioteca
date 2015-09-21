@@ -64,12 +64,12 @@ profile.create_matricula()
 profile.save()
 
 #Creating Material
-m = Livro(nome="Harry Potter 1", autor="J.K.", data_publicacao=datetime(1997,05,01), descricao="Teste", quantidade=5, isbn10="1234567890", isbn13="1234567890123", best_seller=True)
+m = Livro(nome="Harry Potter 1", autor="J.K.", data_publicacao=datetime(1997,05,01), descricao="Teste", quantidade=5, isbn10="1234567890", isbn13="1234567890123", best_seller=True, valor=50.50)
 m.save()
-m = Livro(nome="Harry Potter 2", autor="J.K.", data_publicacao=datetime(1998,05,01), descricao="Teste", quantidade=2, isbn10="0987654321", isbn13="0987654321098", best_seller=False)
+m = Livro(nome="Harry Potter 2", autor="J.K.", data_publicacao=datetime(1998,05,01), descricao="Teste", quantidade=2, isbn10="0987654321", isbn13="0987654321098", best_seller=False, valor=76.50)
 m.save()
-m = Audiovisual(nome="Super video", autor="Desconhecido", data_publicacao=datetime(1985,10,15), descricao="Teste", quantidade=10)
+m = Audiovisual(nome="Super video", autor="Desconhecido", data_publicacao=datetime(1985,10,15), descricao="Teste", quantidade=10, valor=150.00)
 m.save()
-m = RevistaReferencia(nome="Super revista", autor="Desconhecido da revista", data_publicacao=datetime(2011,10,15), descricao="Teste", quantidade=1)
+m = RevistaReferencia(nome="Super revista", autor="Desconhecido da revista", data_publicacao=datetime(2011,10,15), descricao="Teste", quantidade=1, valor=0.50)
 m.save()
     

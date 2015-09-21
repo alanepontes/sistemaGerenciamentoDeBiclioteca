@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 import random
 from datetime import datetime, timedelta
 
+from biblioteca.exceptions import *
+
 #TOOD Organizar os modelos
 
 #Usuario
@@ -72,18 +74,18 @@ class Livro(Material):
                                                 data=data, data_devolucao=data_devolucao)
                         emprestimo.save()
                     else:
-                        raise BaseException("Já possui máximo de itens emprestados.")
+                        raise MaxEmprestimoError()
                 else:
                     if len(quant_emprestimos_user) < 2:
                         emprestimo = Emprestimo(usuario=usuario, material=self,
                                                 data=data, data_devolucao=data_devolucao)
                         emprestimo.save()
                     else:
-                        raise BaseException("Já possui máximo de itens emprestados.")
+                        raise MaxEmprestimoError()
             else:
-                raise BaseException("Não há itens disponíveis.")
+                raise NoItensError()
         else:
-            raise BaseException("Você já possue esse livro em mãos.")
+            raise AlreadyEmprestimoError()
         
         return True
             
@@ -120,18 +122,18 @@ class Audiovisual(Material):
                                                 data=data, data_devolucao=data_devolucao)
                         emprestimo.save()
                     else:
-                        raise BaseException("Já possui máximo de itens emprestados.")
+                        raise MaxEmprestimoError()
                 else:
                     if len(quant_emprestimos_user) < 2:
                         emprestimo = Emprestimo(usuario=usuario, material=self,
                                                 data=data, data_devolucao=data_devolucao)
                         emprestimo.save()
                     else:
-                        raise BaseException("Já possui máximo de itens emprestados.")
+                        raise MaxEmprestimoError()
             else:
-                raise BaseException("Não há itens disponíveis.")
+                raise NoItensError()
         else:
-            raise BaseException("Você já possui esse livro em mãos.")
+            raise AlreadyEmprestimoError()
         
         return True
     
@@ -168,7 +170,7 @@ class Emprestimo(models.Model):
     data_devolucao = models.DateTimeField(blank=True)
     data_devolvida = models.DateTimeField(null=True, blank=True)
     renovada = models.BooleanField(default=False)
-    multa = models.DecimalField(max_digits=7, decimal_places=2)
+    multa = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
     
     def renovar(self):
         if not renovada:

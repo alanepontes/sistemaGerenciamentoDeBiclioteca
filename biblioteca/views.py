@@ -40,13 +40,34 @@ def ListBooksView(request):
 
 def EmprestarView(request, pk):
     material = Material.objects.get(id=pk)
+    messages = []
+    try:
+        if hasattr(material, 'livro'):
+            material.livro.emprestar(request.user)
+        elif hasattr(material, 'audiovisual'):
+            material.audiovisual.emprestar(request.user)
+        elif hasattr(material, 'revistareferencia'):
+            material.revistareferencia.emprestar(request.user)
+    except NoItensError as e:
+        return render_to_response("reservar.html", {"material": material, "errors": messages}, context_instance=RequestContext(request))
+    except MaxEmprestimoError as e:
+        messages.append("Já possui máximo de itens emprestados.")
+        return render_to_response("material.html", {"object": material, "errors": messages}, context_instance=RequestContext(request))
+    except AlreadyEmprestimoError as e:
+        messages.append("Você já possue esse livro em mãos.")
+        return render_to_response("material.html", {"object": material, "errors": messages}, context_instance=RequestContext(request))
+    return redirect(reverse('home'))
+
+def ReservarView(request, pk):
+    material = Material.objects.get(id=pk)
+    
     if hasattr(material, 'livro'):
-        material.livro.emprestar(request.user)
+        material.livro.reservar(request.user)
     elif hasattr(material, 'audiovisual'):
-        material.audiovisual.emprestar(request.user)
+        material.audiovisual.reservar(request.user)
     elif hasattr(material, 'revistareferencia'):
-        material.revistareferencia.emprestar(request.user)
-    return redirect("home")
+        material.revistareferencia.reservar(request.user)
+    return redirect(reverse("home"))
 
 class BookDetailView(DetailView):
     model = Material

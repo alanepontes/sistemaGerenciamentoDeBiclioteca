@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <p>O material está em falta, você deseja reservar?</p>
+
+  <a href="{% url 'reservar' material.id %}">Sim</a>
+{% endblock %}
