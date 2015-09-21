@@ -23,6 +23,7 @@
                 enctype="multipart/form-data">
             {% csrf_token %}
             {{ user_form.as_p }}
+            {{ profile_form.as_p }}
 
             <p>Endereço</p>
             {{ endereco_form.as_p }}

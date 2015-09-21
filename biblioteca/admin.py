@@ -3,13 +3,13 @@ from django.contrib.admin import ModelAdmin
 from django.contrib.auth.models import User
 from biblioteca.models import *
 
-class MatriculaInline(admin.StackedInline):
-    model = Matricula
+class ProfileInline(admin.StackedInline):
+    model = Profile
     can_delete = False
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return self.readonly_fields + ('numero', )
+            return self.readonly_fields + ('matricula', )
         return self.readonly_fields
 
 class EnderecoInline(admin.StackedInline):
@@ -24,7 +24,7 @@ class ContatoInline(admin.StackedInline):
 
 
 class UserAdmin(ModelAdmin):
-    inlines = (MatriculaInline, EnderecoInline, ContatoInline)
+    inlines = (ProfileInline, EnderecoInline, ContatoInline)
 
 admin.site.register(Audiovisual)
 admin.site.register(Livro)

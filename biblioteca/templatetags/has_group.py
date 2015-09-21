@@ -13,3 +13,7 @@ def has_group(user, group_name):
         return True
     else:
         return False
+
+@register.filter(name='check_class')
+def has_group(obj):
+    return obj.__class__.__name__

@@ -11,10 +11,8 @@
   {% if request.user|has_group:"bibliotecario" %}
     {% include "index/bibliotecario.html" %}
   {% elif request.user|has_group:"fornecedor" %}
-    <p>Fornecedor</p>
     {% include "index/fornecedor.html" %}
   {% elif request.user|has_group:"leitor" %}
-    <p>Leitor</p>
     {% include "index/leitor.html" %}
   {% else %}
     <p>Nenhum grupo previsto</p>

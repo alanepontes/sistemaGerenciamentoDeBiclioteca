@@ -10,6 +10,11 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name', 'username', 'email', 'password')
 
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('data_nascimento',)
+
 class EnderecoForm(forms.ModelForm):
     class Meta:
         model = Endereco
@@ -19,3 +24,8 @@ class ContatoForm(forms.ModelForm):
     class Meta:
         model = Contato
         fields = ('contato', 'descricao')
+
+class ReclamacaoForm(forms.ModelForm):
+    class Meta:
+        model = Reclamacao
+        fields = ('reclamacao',)

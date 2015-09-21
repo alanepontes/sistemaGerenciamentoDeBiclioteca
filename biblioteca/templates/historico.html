@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load has_group %}
+
+{% block title %}
+Histórico
+{% endblock %}
+
+{% block content %}
+<ul>
+  {% for h in historico %}
+  <li>
+    [ {{ h.data }} ] -
+    {% if h|check_class == 'Emprestimo' %}
+    Emprestimo de <a href="{% url 'book_detail' h.material.id %}">{{ h.material.nome }}</a>
+    {% elif h|check_class == 'Reserva' %}
+    Reserva de <a href="{% url 'book_detail' h.material.id %}">{{ h.material.nome }}</a>
+    {% elif h|check_class == 'Reclamacao' %}
+    Reclamação
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
