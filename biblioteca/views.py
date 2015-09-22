@@ -16,8 +16,6 @@ from biblioteca.forms import *
 from biblioteca.models import *
 from biblioteca.services import *
 
-#TODO Organizar e padronizar as views
-
 @login_required
 def CancelarRegistroView(request):
     if request.method == "POST":
@@ -50,10 +48,10 @@ def EmprestarView(request, pk):
         return render_to_response("reservar.html", {"object": material, "errors": messages}, context_instance=RequestContext(request))
     except MaxEmprestimoError as e:
         messages.append("Já possui máximo de itens emprestados.")
-        return render_to_response("material.html", {"object": material, "errors": messages}, context_instance=RequestContext(request))
+        return render_to_response("material_detail.html", {"object": material, "errors": messages}, context_instance=RequestContext(request))
     except AlreadyEmprestimoError as e:
         messages.append("Você já possue esse livro em mãos.")
-        return render_to_response("material.html", {"object": material, "errors": messages}, context_instance=RequestContext(request))
+        return render_to_response("material_detail.html", {"object": material, "errors": messages}, context_instance=RequestContext(request))
     return redirect(reverse('home'))
 
 @login_required
@@ -192,12 +190,13 @@ def PedidoDetailView(request, pk):
 
 @login_required
 def PedidoListView(request):
-    pedidos = Pedido.objects.filter(quantidade__gt = 0, usuario=request.user.id)
+    pedidos = Pedido.objects.filter(quantidade__gt = 0, fornecedor=request.user.id)
+    #pedidos = Pedido.objects.all()
         
     return render_to_response("pedido_list.html",{"objects": pedidos}, context_instance=RequestContext(request))
 
 @login_required
-def PedidoView(request):
+def PedidoCreateView(request):
     context = RequestContext(request)
     done = False
 
